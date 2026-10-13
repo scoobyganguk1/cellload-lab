@@ -3,57 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#121a2a">
-  <meta name="description" content="A safe, local 5G capacity simulator for exploring congestion and mitigation policies.">
-  <title>CellLoad Lab - 5G Capacity Simulator</title>
+  <meta name="theme-color" content="#d8d5c8">
+  <meta name="description" content="A local 5G capacity simulator, presented as a pocket field instrument.">
+  <title>CellLoad Lab — Field Instrument 01</title>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
 <body>
-  <header class="phone-status"><span id="deviceClock">09:41</span><span class="device-title">CELLLOAD LAB</span><span class="device-status"><span aria-label="signal strength">▂▄▆</span><span>5G</span><span class="battery"><i></i></span></span></header>
-  <main id="top" class="shell">
-    <section class="hero">
-      <div class="hero-copy"><p class="eyebrow"><span class="online-dot"></span> PRIVATE NETWORK LAB</p><h1>CellLoad <span>Lab</span></h1><p class="hero-text">A pocket-sized 5G capacity simulator. Shape the scenario, start the run, and see how network policies handle demand.</p></div>
-      <aside class="safety-note"><span class="shield" aria-hidden="true">✓</span><div><strong>Airplane mode safe</strong><p>This is a local simulation. It never connects to radios, devices, or live networks.</p></div></aside>
-    </section>
-    <section class="workspace" aria-label="Simulator">
-      <aside class="panel controls-panel">
-        <div class="panel-heading"><div><p class="eyebrow">SETTINGS</p><h2>Build a scenario</h2></div><button id="resetButton" class="text-button" type="button">Reset</button></div>
-        <fieldset class="control-group"><legend>Network</legend>
-          <label class="field-label" for="cellCount">Synthetic cells <output id="cellCountValue">3</output></label><input id="cellCount" type="range" min="1" max="8" value="3">
-          <label class="field-label spaced" for="cellCapacity">Capacity per cell <output id="cellCapacityValue">100</output></label><input id="cellCapacity" type="range" min="40" max="240" step="10" value="100">
-          <p class="field-hint">Arbitrary capacity units; not a real radio measurement.</p>
-        </fieldset>
-        <fieldset class="control-group"><legend>Demand</legend>
-          <label class="field-label" for="arrivalRate">New sessions / minute <output id="arrivalRateValue">18</output></label><input id="arrivalRate" type="range" min="1" max="60" value="18">
-          <label class="field-label spaced" for="sessionLength">Average session length <output id="sessionLengthValue">4 min</output></label><input id="sessionLength" type="range" min="1" max="12" value="4">
-          <label class="field-label spaced" for="userDemand">Demand per user <output id="userDemandValue">16</output></label><input id="userDemand" type="range" min="5" max="50" value="16">
-        </fieldset>
-        <fieldset class="control-group"><legend>Stress scenario</legend>
-          <label class="field-label" for="multiShare">Multi-subscription users <output id="multiShareValue">10%</output></label><input id="multiShare" type="range" min="0" max="50" step="5" value="10">
-          <p class="field-hint">Synthetic demand multiplier only. No SIM, eSIM, or device connections are made.</p>
-        </fieldset>
-        <fieldset class="control-group policy-group"><legend>Capacity policy</legend>
-          <label class="select-wrap" for="policy"><span class="sr-only">Capacity policy</span><select id="policy"><option value="best">Best effort</option><option value="fair">Fair share</option><option value="admission">Admission control</option></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
-          <p id="policyDescription" class="field-hint">All sessions are admitted; overloaded capacity is shared in proportion to requested demand.</p>
-        </fieldset>
-        <button id="runButton" class="primary-button" type="button" aria-pressed="false"><span id="runIcon" aria-hidden="true">▶</span><span id="runLabel">Start simulation</span></button>
-        <button id="stepButton" class="secondary-button" type="button">Step forward <span aria-hidden="true">→</span></button>
-      </aside>
-      <div class="dashboard">
-        <div class="metrics-grid" aria-label="Simulation metrics">
-          <article class="metric-card"><div class="metric-top"><span class="metric-icon blue">◷</span><span class="metric-label">SIMULATION TIME</span></div><div class="metric-value" id="timeMetric">00:00</div><div class="metric-foot">simulated minutes</div></article>
-          <article class="metric-card"><div class="metric-top"><span class="metric-icon teal">◎</span><span class="metric-label">ACTIVE USERS</span></div><div class="metric-value" id="activeMetric">0</div><div class="metric-foot"><span id="arrivalFoot">0</span> arrivals this minute</div></article>
-          <article class="metric-card"><div class="metric-top"><span class="metric-icon orange">↗</span><span class="metric-label">CAPACITY USED</span></div><div class="metric-value"><span id="capacityMetric">0</span><small>%</small></div><div class="metric-foot">across all cells</div></article>
-          <article class="metric-card"><div class="metric-top"><span class="metric-icon red">⊘</span><span class="metric-label">BLOCKED SESSIONS</span></div><div class="metric-value" id="blockedMetric">0</div><div class="metric-foot">admission policy</div></article>
-        </div>
-        <section class="panel chart-panel"><div class="panel-heading chart-heading"><div><p class="eyebrow">LIVE MODEL OUTPUT</p><h2>Cell utilization</h2></div><div class="chart-legend"><span><i class="legend-dot usage-dot"></i>Used</span><span><i class="legend-dot capacity-dot"></i>Capacity</span></div></div><div class="chart-wrap"><canvas id="utilizationChart" aria-label="Chart of cell utilization over simulation time" role="img"></canvas></div><div id="cellReadout" class="cell-readout" aria-label="Current cell status"></div><div class="chart-axis"><span id="chartStart">00:00</span><span>SIMULATED TIME</span><span id="chartEnd">00:00</span></div></section>
-        <section class="lower-grid"><article class="panel outcome-panel"><div class="panel-heading compact"><div><p class="eyebrow">SERVICE QUALITY</p><h2>Demand served</h2></div><span id="servedBadge" class="status-badge">Waiting</span></div><div class="served-row"><strong id="servedMetric">0%</strong><span>of requested demand<br>currently served</span></div><div class="progress-track"><div id="servedBar" class="progress-fill"></div></div><p id="outcomeNote" class="outcome-note">Start the simulation to see how this scenario behaves.</p></article>
-          <article class="panel log-panel"><div class="panel-heading compact"><div><p class="eyebrow">RECENT EVENTS</p><h2>Activity log</h2></div><button id="exportButton" class="text-button" type="button">Export CSV ↓</button></div><ol id="eventLog" class="event-log"><li><span class="event-time">00:00</span><span>Ready. Press Start simulation to generate synthetic sessions.</span></li></ol></article></section>
+  <main class="device-frame" aria-label="CellLoad Lab smartphone simulator">
+    <div class="device-screen">
+      <div class="camera-island" aria-hidden="true"><i></i></div>
+      <header class="status-bar"><span id="deviceClock">09:41</span><span class="status-right"><span class="signal-bars" aria-label="signal">▂▄▆</span><span>5G</span><span class="battery"><i></i></span></span></header>
+      <div class="app-scroll">
+        <header class="app-header">
+          <div class="maker-mark" aria-hidden="true">CL<span>.</span></div>
+          <div class="maker-copy"><span class="maker-kicker">W. REID'S NETWORK NOTES</span><span class="maker-name">FIELD INSTRUMENT <b>01</b></span></div>
+          <span class="edition-stamp">LOCAL<br>BUILD</span>
+        </header>
+        <section class="intro">
+          <div class="intro-top"><span class="live-mark"><i></i> READY TO RUN</span><span class="serial">SIM / 5G</span></div>
+          <h1>Cell<br><em>Load</em><sup>01</sup></h1>
+          <p>A pocket lab for exploring what happens when demand meets capacity.</p>
+        </section>
+        <section class="start-card" aria-label="Simulation controls">
+          <div class="start-meta"><span>SCENARIO A</span><span id="runStateLabel">STANDING BY</span></div>
+          <button id="runButton" class="primary-button" type="button" aria-pressed="false"><span id="runIcon" aria-hidden="true">▶</span><span id="runLabel">Start simulation</span></button>
+          <div class="start-tools"><button id="stepButton" class="secondary-button" type="button">Single step <span aria-hidden="true">↗</span></button><button id="resetButton" class="text-button" type="button">Reset ↺</button></div>
+        </section>
+        <section class="readout-section" aria-label="Simulation metrics">
+          <div class="section-heading"><span>01 / LIVE READOUT</span><span class="rule"></span></div>
+          <div class="metrics-grid">
+            <article class="metric-card"><span class="metric-label">ELAPSED</span><strong id="timeMetric">00:00</strong><small>SIM MIN</small></article>
+            <article class="metric-card"><span class="metric-label">IN SESSION</span><strong id="activeMetric">0</strong><small><span id="arrivalFoot">0</span> NEW / MIN</small></article>
+            <article class="metric-card"><span class="metric-label">CAPACITY</span><strong><span id="capacityMetric">0</span><i>%</i></strong><small>OF MODEL TOTAL</small></article>
+            <article class="metric-card"><span class="metric-label">TURNED AWAY</span><strong id="blockedMetric">0</strong><small>ADMISSION POLICY</small></article>
+          </div>
+        </section>
+        <section class="panel chart-panel"><div class="section-heading"><span>02 / CELL LOAD</span><span class="chart-legend"><i></i> USED</span></div><div class="chart-title"><h2>Utilization</h2><span id="servedBadge" class="status-badge">Waiting</span></div><div class="chart-wrap"><canvas id="utilizationChart" aria-label="Chart of cell utilization over simulation time" role="img"></canvas></div><div id="cellReadout" class="cell-readout" aria-label="Current cell status"></div><div class="chart-axis"><span id="chartStart">00:00</span><span>SIMULATED TIME</span><span id="chartEnd">00:00</span></div></section>
+        <section class="panel outcome-panel"><div class="section-heading"><span>03 / SERVICE CHECK</span><span class="service-dot" aria-hidden="true"></span></div><div class="served-row"><strong id="servedMetric">0%</strong><span>of requested demand<br>is being served</span></div><div class="progress-track"><div id="servedBar" class="progress-fill"></div></div><p id="outcomeNote" class="outcome-note">Start a run to see how this scenario behaves.</p></section>
+        <details class="settings-panel"><summary><span>04 / TUNE THE MODEL</span><b>+</b></summary>
+          <div class="settings-body">
+            <fieldset class="control-group"><legend>Network</legend>
+              <label class="field-label" for="cellCount">Synthetic cells <output id="cellCountValue">3</output></label><input id="cellCount" type="range" min="1" max="8" value="3">
+              <label class="field-label spaced" for="cellCapacity">Capacity per cell <output id="cellCapacityValue">100</output></label><input id="cellCapacity" type="range" min="40" max="240" step="10" value="100"><p class="field-hint">Abstract units, not a radio measurement.</p>
+            </fieldset>
+            <fieldset class="control-group"><legend>Demand</legend>
+              <label class="field-label" for="arrivalRate">New sessions / minute <output id="arrivalRateValue">18</output></label><input id="arrivalRate" type="range" min="1" max="60" value="18">
+              <label class="field-label spaced" for="sessionLength">Average session length <output id="sessionLengthValue">4 min</output></label><input id="sessionLength" type="range" min="1" max="12" value="4">
+              <label class="field-label spaced" for="userDemand">Demand per user <output id="userDemandValue">16</output></label><input id="userDemand" type="range" min="5" max="50" value="16">
+            </fieldset>
+            <fieldset class="control-group"><legend>Stress profile</legend>
+              <label class="field-label" for="multiShare">Multi-subscription share <output id="multiShareValue">10%</output></label><input id="multiShare" type="range" min="0" max="50" step="5" value="10"><p class="field-hint">Synthetic demand multiplier. No SIM or eSIM connections are made.</p>
+            </fieldset>
+            <fieldset class="control-group"><legend>Scheduler</legend>
+              <label class="select-wrap" for="policy"><span class="sr-only">Capacity policy</span><select id="policy"><option value="best">Best effort</option><option value="fair">Fair share</option><option value="admission">Admission control</option></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
+              <p id="policyDescription" class="field-hint">All sessions are admitted; overloaded capacity is shared in proportion to requested demand.</p>
+            </fieldset>
+          </div>
+        </details>
+        <section class="panel log-panel"><div class="section-heading"><span>05 / LAB NOTES</span><button id="exportButton" class="text-button" type="button">Export CSV ↓</button></div><ol id="eventLog" class="event-log"><li><span class="event-time">00:00</span><span>Ready. Start a run to generate synthetic sessions.</span></li></ol></section>
+        <footer><span>BUILT AS A LOCAL MODEL</span><span>NO NETWORK CONNECTION</span></footer>
       </div>
-    </section>
-    <footer><span>● Educational model · arbitrary units</span><span>Runs locally on this device</span></footer>
+      <div class="home-indicator" aria-hidden="true"><span></span></div>
+    </div>
+    <div class="side-button side-button-left" aria-hidden="true"></div><div class="side-button side-button-right" aria-hidden="true"></div>
   </main>
-  <div class="phone-home-indicator" aria-hidden="true"><span></span></div>
+  <script>document.documentElement.dataset.ready='true';</script>
 </body>
 </html>

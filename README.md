@@ -1,6 +1,6 @@
 # CellLoad Lab
 
-CellLoad Lab is an educational, browser based 5G capacity simulator. It models synthetic users competing for a finite radio capacity budget, then lets you compare scheduling and admission policies. It does not connect to cellular equipment, transmit traffic, interact with eSIM providers, or affect real users or networks.
+CellLoad Lab is an educational, browser based 5G capacity simulator presented as a phone shaped field instrument. Its compact screen uses a field-notes style, hand-set labels, warm paper colors, and a physical handset frame on desktop. It models synthetic users competing for a finite radio capacity budget, then lets you compare scheduling and admission policies. It does not connect to cellular equipment, transmit traffic, interact with eSIM providers, or affect real users or networks.
 
 ## Run it
 
@@ -23,8 +23,8 @@ In **Best effort**, each session requests its configured demand and capacity is 
 
 ## Project layout
 
-- `index.html` — controls, dashboard, and chart surface
-- `styles.css` — responsive styling
+- `index.html` - handset screen, controls, dashboard, and chart surface
+- `styles.css` - phone frame and responsive styling
 - `app.js` — simulation model, rendering, and CSV export
 
 ## Safety boundary

@@ -6,7 +6,7 @@
     ['arrivalRate','arrivals','arrivalRateValue',v=>v], ['sessionLength','length','sessionLengthValue',v=>`${v} min`],
     ['userDemand','demand','userDemandValue',v=>v], ['multiShare','multi','multiShareValue',v=>`${v}%`]
   ];
-  const colors = ['#64a8ff','#47d6bd','#ffb558','#da83ff','#ff737f','#7ee381','#53c4ef','#f3d35e'];
+  const colors = ['#db5a38','#4d8877','#526881','#aa783b','#84637d','#709345','#438a9d','#ad654f'];
   let state, timer = null, lastArrivals = 0;
   const history = [];
 
@@ -84,15 +84,15 @@
     const dpr=window.devicePixelRatio||1;canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
     const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const w=rect.width,h=rect.height,left=31,right=9,top=12,bottom=22,plotW=w-left-right,plotH=h-top-bottom;
     ctx.clearRect(0,0,w,h);ctx.font='9px DM Mono, monospace';ctx.textAlign='right';ctx.textBaseline='middle';
-    for(let pct=0;pct<=100;pct+=25){const y=top+plotH*(1-pct/100);ctx.strokeStyle='#34465e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();ctx.fillStyle='#8295ad';ctx.fillText(`${pct}%`,left-8,y);}
+    for(let pct=0;pct<=100;pct+=25){const y=top+plotH*(1-pct/100);ctx.strokeStyle='#cbc9bb';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();ctx.fillStyle='#77776b';ctx.fillText(`${pct}%`,left-8,y);}
     const points=history.slice(-31),denominator=Math.max(30,points.length-1);
     points.forEach((values,index)=>values.forEach((value,cell)=>{const x=left+plotW*index/denominator,y=top+plotH*(1-value);if(index===0){ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fillStyle=colors[cell];ctx.fill();}else{const prev=points[index-1][cell]??0;ctx.beginPath();ctx.moveTo(left+plotW*(index-1)/denominator,top+plotH*(1-prev));ctx.lineTo(x,y);ctx.strokeStyle=colors[cell];ctx.lineWidth=2;ctx.stroke();}}));
-    ctx.setLineDash([4,5]);ctx.strokeStyle='#647895';ctx.beginPath();ctx.moveTo(left,top);ctx.lineTo(w-right,top);ctx.stroke();ctx.setLineDash([]);
+    ctx.setLineDash([4,5]);ctx.strokeStyle='#a6a497';ctx.beginPath();ctx.moveTo(left,top);ctx.lineTo(w-right,top);ctx.stroke();ctx.setLineDash([]);
   }
   function setRunState(running) {
     const button=$('runButton');
-    if(running){$('runIcon').textContent='Ⅱ';$('runLabel').textContent='Pause simulation';button.classList.add('is-running');button.setAttribute('aria-pressed','true');}
-    else{$('runIcon').textContent=state.minute?'▶':'▶';$('runLabel').textContent=state.minute?'Resume simulation':'Start simulation';button.classList.remove('is-running');button.setAttribute('aria-pressed','false');}
+    if(running){$('runIcon').textContent='||';$('runLabel').textContent='Pause simulation';$('runStateLabel').textContent='RUNNING';button.classList.add('is-running');button.setAttribute('aria-pressed','true');}
+    else{$('runIcon').textContent='>'; $('runLabel').textContent=state.minute?'Resume simulation':'Start simulation';$('runStateLabel').textContent=state.minute?'PAUSED':'STANDING BY';button.classList.remove('is-running');button.setAttribute('aria-pressed','false');}
   }
   function toggleRun() {
     if(timer){clearInterval(timer);timer=null;setRunState(false);log('Simulation paused.','good');}
