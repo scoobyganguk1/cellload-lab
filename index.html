@@ -61,6 +61,20 @@
             </fieldset>
           </div>
         </details>
+        <details class="validation-panel"><summary><span>05 / PROVE IT IN A TEST LAB</span><b>+</b></summary>
+          <div class="validation-copy">
+            <p class="validation-lede">This simulator shows a policy idea. It is not evidence that a real 5G network will behave the same way.</p>
+            <ol>
+              <li><b>Set a hypothesis.</b> Predict when the test network will stop accepting new sessions. The model only represents turning away new synthetic sessions; it does not disconnect active users.</li>
+              <li><b>Use an isolated, authorised testbed.</b> Use a private 5G core and gNB with test UEs or a network simulator. Keep public networks and uninvolved users out of the test.</li>
+              <li><b>Establish a baseline.</b> Run the planned session mix at normal load, then increase offered load in controlled steps within the lab owner's limits.</li>
+              <li><b>Record the evidence.</b> Capture attempted, accepted, and rejected sessions with the reported cause, alongside radio resource use, active UEs, throughput, latency, and packet loss.</li>
+              <li><b>Compare and calibrate.</b> Match the model's admission threshold and service trend to one run, tune the assumptions, then check them against a separate run. Report errors and limits.</li>
+            </ol>
+            <p class="validation-note">The gNB handles radio admission and scheduling; PDU session establishment is a separate 5G procedure. Check both layers in the test records. <a href="https://www.etsi.org/deliver/etsi_ts/138300_138399/138300/18.07.00_60/ts_138300v180700p.pdf" target="_blank" rel="noreferrer">3GPP TS 38.300</a> · <a href="https://www.etsi.org/deliver/etsi_ts/123500_123599/123502/18.05.00_60/ts_123502v180500p.pdf" target="_blank" rel="noreferrer">TS 23.502</a></p>
+            <p class="validation-note"><b>Scope:</b> This validates a defensive model in that specific lab. It does not demonstrate or authorise disrupting a public cell.</p>
+          </div>
+        </details>
         <section class="panel log-panel"><div class="section-heading"><span>05 / LAB NOTES</span><button id="exportButton" class="text-button" type="button">Export CSV ↓</button></div><ol id="eventLog" class="event-log"><li><span class="event-time">00:00</span><span>Ready. Start a run to generate synthetic sessions.</span></li></ol></section>
         <footer><span>BUILT AS A LOCAL MODEL</span><span>NO NETWORK CONNECTION</span></footer>
       </div>
